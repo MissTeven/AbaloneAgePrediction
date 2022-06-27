@@ -5,12 +5,15 @@ import flask
 from flask import request
 import numpy as np
 
+from detector import Detector
+
 server = flask.Flask(__name__)
+detector = Detector()
 
 
 @server.route('/test/get', methods=['get'])
 def testGet():
-    return "Hello world!"
+    return {"code": 200, "message": "ok"}
 
 
 @server.route('/test/post', methods=['post'])
@@ -18,18 +21,19 @@ def testPost():
     return "Hello world!"
 
 
-@server.route('/recognize', methods=['GET', 'POST'])
-def recognize():
-    img = request.form.get('image')
+@server.route('/detect', methods=['post'])
+def detect():
+    # Sex,Length,Diameter,Height,Whole weight,Shucked weight,Viscera weight,Shell weight,Rings
+    sex = request.form.get('sex')
+    length = request.form.get('length')
+    diameter = request.form.get('diameter')
+    height = request.form.get('height')
+    whole_weight = request.form.get('whole_weight')
+    shucked_weight = request.form.get('shucked_weight')
+    viscera_weight = request.form.get('viscera_weight')
+    shell_weight = request.form.get('shell_weight')
+    rings = request.form.get('rings')
 
-    base_s1 = base64.b64decode(img.encode())  # 将str转换为bytes,并进行base64解码，得到bytes类型
-    buf = BytesIO()  # 内存中创建一个buf,用于存储图像文件内容
-    buf.write(base_s1)  # 将图像文件内容写入到该buf中，该buf相当于一个临时文件
-    buf.seek(0)  # 将文件指针放在文件开头
-    data = Image.open(buf).convert('RGB')  # 将buf作为文件名，读取该文件，并转换成RGB
-    data = np.mat(data)  # 将图像数据转换成array
-    return modeToRecognize(data)
-
-
-def modeToRecognize(data):
-    return "Hello World!"
+    data = [sex, length, diameter, height, whole_weight, shucked_weight, viscera_weight, shell_weight, rings]
+    res = detector.detect(np.asarray(data))
+    return {"code": 200, "message": "ok", data: res}

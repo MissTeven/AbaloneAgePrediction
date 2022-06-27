@@ -13,7 +13,7 @@ from sklearn.model_selection import RandomizedSearchCV
 
 
 # import data
-data = pd.read_csv("data_bak.txt")
+data = pd.read_csv("data/data_bak.txt")
 # 检查是否有异常值
 print(data.info())
 print(data.isna().sum())
