@@ -1,0 +1,16 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/apk
+/PackageChannels
+.idea
+*iml
+app/proguardMapping.txt
+app/mapping.txt
+readme
+YG_Basic_Ai/.cxx
+venv3.8
