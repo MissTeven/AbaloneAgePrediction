@@ -1,6 +1,6 @@
 import flask
 import numpy as np
-from flask import request
+from flask import request, app
 
 from detector import Detector
 
@@ -22,6 +22,13 @@ def testPost():
 def detect():
     # Sex,Length,Diameter,Height,Whole weight,Shucked weight,Viscera weight,Shell weight,Rings
     sex = request.form.get('sex')
+    if sex == "M":
+        sex = 2
+    elif sex == "F":
+        sex = 0
+    else:
+        sex = 1
+
     length = request.form.get('length')
     diameter = request.form.get('diameter')
     height = request.form.get('height')
