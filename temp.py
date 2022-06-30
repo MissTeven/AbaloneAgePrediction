@@ -14,6 +14,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 # 调用Baidu API鉴权
+from detector import Detector
+
 APP_ID = '26543514'
 API_KEY = 'EXfctgN6vHUm17AMAAmmB27h'
 SECRET_KEY = 'YZy6b6xiTylOSZvv1WQuC0SEmHEdoZlI'
@@ -21,16 +23,16 @@ client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
 
 
 def show_score(model):
-    train_preds = model.predict(X_train)
-    test_preds = model.predict(X_test)
-    print("训练集平均绝对误差", mean_absolute_error(Y_train, train_preds))
-    print("测试集平均绝对误差", mean_absolute_error(Y_test, test_preds))
-    print("训练集均方误差", mean_squared_log_error(Y_train, train_preds))
-    print("测试集均方误差", mean_squared_log_error(Y_test, test_preds))
-    print("训练集均方根误差", np.sqrt(mean_squared_log_error(Y_train, train_preds)))
-    print("测试集均方根误差", np.sqrt(mean_squared_log_error(Y_test, test_preds)))
-    print("训练集R2分数", r2_score(Y_train, train_preds))
-    print("测试集R2分数", r2_score(Y_test, test_preds))
+    # train_preds = model.predict(X_train)
+    # test_preds = model.predict(X_test)
+    # print("训练集平均绝对误差", mean_absolute_error(Y_train, train_preds))
+    # print("测试集平均绝对误差", mean_absolute_error(Y_test, test_preds))
+    # print("训练集均方误差", mean_squared_log_error(Y_train, train_preds))
+    # print("测试集均方误差", mean_squared_log_error(Y_test, test_preds))
+    # print("训练集均方根误差", np.sqrt(mean_squared_log_error(Y_train, train_preds)))
+    # print("测试集均方根误差", np.sqrt(mean_squared_log_error(Y_test, test_preds)))
+    # print("训练集R2分数", r2_score(Y_train, train_preds))
+    # print("测试集R2分数", r2_score(Y_test, test_preds))
     return 0
 
 
@@ -87,16 +89,16 @@ def speechSync(input):
 
 
 if __name__ == '__main__':
-    data = pd.read_csv("data/data_bak.txt")
-    l_encoder = LabelEncoder()
-    data["Sex"] = l_encoder.fit_transform(data["Sex"])
-    X = data.drop("Rings", axis=1)
-    Y = data["Rings"]
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=14)
-    # 使用搜索后的结果建立预测模型
-    ideal_model = RandomForestRegressor(max_depth=None, max_features=0.5, min_samples_leaf=2, min_samples_split=10,
-                                        n_estimators=200)
-    ideal_model.fit(X_train, Y_train)
+    # data = pd.read_csv("data/data_bak.txt")
+    # l_encoder = LabelEncoder()
+    # data["Sex"] = l_encoder.fit_transform(data["Sex"])
+    # X = data.drop("Rings", axis=1)
+    # Y = data["Rings"]
+    # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=14)
+    # # 使用搜索后的结果建立预测模型
+    # ideal_model = RandomForestRegressor(max_depth=None, max_features=0.5, min_samples_leaf=2, min_samples_split=10,
+    #                                     n_estimators=200)
+    # ideal_model.fit(X_train, Y_train)
 
     # 模型参数打印
     # show_score(ideal_model)
@@ -111,12 +113,14 @@ if __name__ == '__main__':
     # test_pred = ideal_model.predict(a)
     # print(test_pred)
     # 手写识别
-    handwrite = readHandWriting('hw1.jpg')
+    handwrite = readHandWriting('./data/hw1.jpg')
+    print("handwrite->")
+    print(handwrite)
     handwrite = np.array(handwrite)
     handwrite = handwrite.reshape(1, -1)
     print("手写数字识别结果为：", handwrite)
     # 进行预测
-    res = ideal_model.predict(handwrite)
+    res = Detector().detect(handwrite)
     print("预测鲍鱼年龄约为：" + str(np.round(res)) + '(' + str(res) + ')')
 
     # 语音合成
